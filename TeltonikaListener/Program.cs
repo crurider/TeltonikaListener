@@ -49,11 +49,13 @@ namespace TeltonikaListener {
                     int length;
                     while ((length = ns.Read(buffer, 0, buffer.Length)) > 0) {
                         string msgFromClient = Encoding.Default.GetString(buffer.Take(length).ToArray()).Trim();
+                        sr.WriteLineAsync(msgFromClient);
 
                         byte[] msg = new byte[] { 0x01 };
                         // Send back a response.
                         ns.Write(msg, 0, msg.Length);
                     }
+                    sr.Close();
                     clientSocket.Shutdown(SocketShutdown.Both);
                     clientSocket.Disconnect(true);
                     return true;
